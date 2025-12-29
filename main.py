@@ -9,7 +9,7 @@ from broker.websocket import MarketFeed
 from strategy.option_selector import select_option_by_volume
 from strategy.option_strategy import OptionStrategy
 from config.settings import UNDERLYING, CANDLE_INTERVAL
-
+from broker.websocket import MarketFeed
 
 # ------------------ INIT ------------------
 
@@ -23,10 +23,16 @@ def select_initial_option():
     selected_ce = select_option_by_volume(option_chain, "CE")
     selected_pe = select_option_by_volume(option_chain, "PE")
 
+    # choose highest volume between CE & PE
+    candidates = []
     if selected_ce:
-        strategy.set_option(selected_ce)
-    elif selected_pe:
-        strategy.set_option(selected_pe)
+        candidates.append(selected_ce)
+    if selected_pe:
+        candidates.append(selected_pe)
+
+    if candidates:
+        best = max(candidates, key=lambda opt: opt["volume"])
+        strategy.set_option(best)
     else:
         raise RuntimeError("No option found in premium range")
 
@@ -84,7 +90,7 @@ def main():
 
     # connect market feed
     feed = MarketFeed(on_tick)
-    feed.connect(url="WSS_MARKET_FEED_URL")
+    feed.connect()
 
 
 if __name__ == "__main__":
