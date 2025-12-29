@@ -14,7 +14,6 @@ UNDERLYING = os.getenv("UNDERLYING")
 PREMIUM_MIN = int(os.getenv("PREMIUM_MIN"))
 PREMIUM_MAX = int(os.getenv("PREMIUM_MAX"))
 
-QTY = int(os.getenv("QTY"))
 LOTS = int(os.getenv("LOTS"))
 
 MAX_TRADES_PER_DAY = int(os.getenv("MAX_TRADES_PER_DAY"))
